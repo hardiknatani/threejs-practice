@@ -58,16 +58,15 @@ helper!:CameraHelper
     light.shadow.camera.bottom = 2
     light.shadow.camera.near = 1
     light.shadow.camera.far = 5;
-this.helper = new Three.CameraHelper(light.shadow.camera)
-this.scene.add(this.helper)
+    this.helper = new Three.CameraHelper(light.shadow.camera)
+    this.scene.add(this.helper)
 
-const lightPivot = new Three.Object3D()
-lightPivot.add(light)
-lightPivot.rotation.y += 0.01
-this.scene.add(lightPivot)
-    
-
-     this.controls = new OrbitControls(this.camera, this.canvasRef.nativeElement)
+    const lightPivot = new Three.Object3D()
+    lightPivot.add(light)
+    lightPivot.rotation.y += 0.01
+    this.scene.add(lightPivot)
+        
+    this.controls = new OrbitControls(this.camera, this.canvasRef.nativeElement)
 
   }
 
@@ -101,6 +100,5 @@ ngAfterViewInit(){
 
 this.createScene();
 this.startRendering()
-
 }
 }
