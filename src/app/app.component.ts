@@ -85,14 +85,20 @@ console.log(this.x,this.y)
       this.context2d.strokeStyle=this.generateRandomColor();
       this.context2d.beginPath()
       // x=-x;
+      this.context2d.fillStyle = this.generateRandomColor()
+
       this.context2d.arc(x,y,30,0,Math.PI*2,true);
       this.context2d.stroke()
+      this.context2d.fill()
+
     }else {
       this.context2d.strokeStyle=this.generateRandomColor();
       this.context2d.beginPath()
+      this.context2d.fillStyle = this.generateRandomColor()
       // y+=20;
       this.context2d.arc(x,y,30,0,Math.PI*2);
       this.context2d.stroke()
+      this.context2d.fill()
     }}
  }
 
