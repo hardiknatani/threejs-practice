@@ -1,5 +1,6 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import * as THREE from 'three';
+import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
 import {TrackballControls} from "../../node_modules/three-trackballcontrols-ts"
 
 @Component({
@@ -7,7 +8,7 @@ import {TrackballControls} from "../../node_modules/three-trackballcontrols-ts"
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements AfterViewInit {
+export class AppComponent implements AfterViewInit,OnInit {
   title = 'threejs-practice';
   @ViewChild('canvas') canvasRef!:ElementRef<HTMLCanvasElement>;
   get aspectRatio(){
@@ -28,6 +29,9 @@ return window.innerWidth/window.innerHeight
       antialias:true,
       canvas:this.canvasRef.nativeElement
     });
+    //why tf is threre a blur 
+    this.renderer.setSize(window.innerWidth*99,window.innerHeight*99)
+    this.renderer.setSize(window.innerWidth,window.innerHeight)
     this.camera.position.z=20;
     this.camera.position.y=10;
     this.camera.position.x=10;
@@ -38,20 +42,23 @@ return window.innerWidth/window.innerHeight
     let light = new THREE.DirectionalLight('white',5)
     light.position.set(1,1,1);
     this.scene.add(light);
-    this.controls = new TrackballControls((<any>this.camera),this.canvasRef.nativeElement);
+    // this.controls = new TrackballControls((<any>this.camera),this.canvasRef.nativeElement);
+    this.controls = new OrbitControls(this.camera,this.canvasRef.nativeElement);
+    this.controls.enableDamping = true
   }
   clock = new THREE.Clock()
 
   startRendering(){
     this.renderer.setClearColor("#233143");
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio ,2))
       
       let that = this;
       (function render(){
       requestAnimationFrame(render);
           const elapsedTime = that.clock.getElapsedTime()
 
-      that.boxMesh.rotation.x=elapsedTime*Math.PI*2;
-      that.boxMesh.rotation.y=elapsedTime*Math.PI*2;
+      that.boxMesh.rotation.x=Math.cos(elapsedTime);
+      that.boxMesh.rotation.y=Math.sin(elapsedTime);
   
       that.renderer.render(that.scene, that.camera);
       that.controls.update();
@@ -59,7 +66,9 @@ return window.innerWidth/window.innerHeight
 
   }
 
-    
+    ngOnInit(){
+    }
+
   ngAfterViewInit(){
     window.addEventListener('resize', () => {
       this.renderer.setSize(window.innerWidth, window.innerHeight);
