@@ -3,6 +3,7 @@ import * as Three from 'three';
 import { BufferGeometry, CylinderGeometry } from 'three';
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls'
 import * as dat from 'dat.gui';
+// import '../assets/textures/door'
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -14,7 +15,7 @@ export class AppComponent implements AfterViewInit {
 
   // Scene
   scene = new Three.Scene();
-  camera = new Three.PerspectiveCamera(75,window.innerWidth/innerHeight);
+  camera = new Three.PerspectiveCamera(75,window.innerWidth/innerHeight,0.1,1000);
   renderer!: Three.WebGLRenderer
 
 
@@ -35,7 +36,11 @@ export class AppComponent implements AfterViewInit {
 
   createScene(){
     this.camera.position.set(50,50,50);
-
+let directionalLight = new Three.SpotLight("#FF0000",0.5);
+directionalLight.position.set(100,100,100);
+let lightHelper = new Three.SpotLightHelper(directionalLight)
+this.scene.add(lightHelper)
+this.scene.add(directionalLight)
     let cameraGuiFolder =   this.gui.addFolder("Camera Position");
     let camera = this.camera
     cameraGuiFolder.add(this.camera.position,'x',-50,50,1)
@@ -94,10 +99,21 @@ for(let i =0;i<500;i++){
   this.scene.add(bufferMesh)
   };
 
-  let sphereGeom = new Three.SphereGeometry(15,10,20);  
-  let sphereMaterial = new Three.MeshBasicMaterial({wireframe:true,color:colorsObj.sphereColor});
+  let sphereGeom = new Three.BoxGeometry(15,10,20);  
+  let texture = new Three.TextureLoader().load('../assets/textures/door/color.jpg',()=>{
+console.log(    "Loaded successfully")  },()=>{
+    console.log('in progress')
+  },()=>{
+    console.log('error')
+  })
+  let sphereMaterial = new Three.MeshBasicMaterial({
+    // wireframe:true,color:colorsObj.sphereColor
+  map:texture
+  });
+  texture.repeat.x=2
  this.sphereMesh = new Three.Mesh(sphereGeom,sphereMaterial)
- this.sphereMesh.position.set(50,50,50)
+ 
+ this.sphereMesh.position.set(20,20,20)
   this.scene.add(this.sphereMesh);
   let sphereFolder = this.gui.addFolder('Sphere')
   sphereFolder.add(this.sphereMesh.material,'wireframe');
